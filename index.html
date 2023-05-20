@@ -31,6 +31,15 @@
         <li>
           Best time: {{ data.data.best_record_time }}
         </li>
+        <li>
+            Wins: {{ data.data.records[2].win }}
+        </li>
+        <li>
+            Loses: {{ data.data.records[2].lose }}
+        </li>
+        <li>
+            Draft: {{ data.data.records[2].draw }}
+        </li>
       </ul>
     </div>
     <div v-else>
