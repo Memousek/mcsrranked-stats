@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+</style>
+<body>
+  <div id="app">
+    <form @submit.prevent="fetchData">
+        <input type="text" v-model="username" placeholder="Enter username" ref="usernameInput">
+        <button type="submit">Search</button>
+    </form>
+    
+    <div v-if="data">
+      <h1>{{ data.data.nickname }}'s mcsrranked.com rank</h1>
+      <ul>
+        <li>
+          Elo: <span id="rank">{{ rankText }}</span>
+        </li>
+        <li>
+          Total games: {{ data.data.total_played }}
+        </li>
+        <li>
+          Highest winstreak: {{ data.data.highest_winstreak }}
+        </li>
+        <li>
+          Best time: {{ data.data.best_record_time }}
+        </li>
+      </ul>
+    </div>
+    <div v-else>
+      <p>No data available</p>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
