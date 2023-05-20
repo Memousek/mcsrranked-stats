@@ -61,5 +61,10 @@
           ? "diamond III"
           : "";
     },
+    formatTime(timeInMs) {
+        const minutes = Math.floor(timeInMs / 60000);
+        const seconds = ((timeInMs % 60000) / 1000).toFixed(2);
+        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+      },
     },
   });
