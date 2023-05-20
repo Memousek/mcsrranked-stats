@@ -11,6 +11,10 @@
 </style>
 <body>
   <div id="app">
+    <form @submit.prevent="fetchData">
+        <input type="text" v-model="username" placeholder="Enter username" ref="usernameInput">
+        <button type="submit">Search</button>
+    </form>
     <div v-if="data">
       <h1>{{ data.data.nickname }}'s mcsrranked.com profile</h1>
       <ul>
