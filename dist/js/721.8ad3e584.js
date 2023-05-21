@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkstats"]=self["webpackChunkstats"]||[]).push([[721],{9721:function(n,s,t){t.r(s),t.d(s,{default:function(){return f}});var a=t(9199);const e={class:"about"},r=(0,a._)("h1",null,"This is an Leaderboard page",-1),u=[r];function c(n,s){return(0,a.wg)(),(0,a.iD)("div",e,u)}var i=t(89);const o={},d=(0,i.Z)(o,[["render",c]]);var f=d}}]);
-//# sourceMappingURL=721.8ad3e584.js.map
