@@ -12,20 +12,42 @@
       <div class="player-card">
         <img :src="getImageUrl" :alt="getImageAlt" class="player-avatar" />
         <ul class="player-stats-list">
-          <li>Username: {{ data.data.nickname }}</li>
-          <li>
-            Elo: <span id="rank">{{ rankText }} ({{data.data.elo_rate}})</span>
+          <li style="font-size: 2rem;font-weight: bold;">{{ data.data.nickname }}</li>
+          <li style="margin-bottom: 20px">
+            <span id="rank">{{ rankText }} ({{data.data.elo_rate}})</span>
           </li>
-          <li>Total games: {{ data.data.total_played }}</li>
-          
-          <li>Highest win streak: {{ data.data.highest_winstreak }}</li>
-          <li>Best time: {{ formatTime(data.data.best_record_time) }}</li>
-          <li>Wins: {{ data.data.records[2].win }}</li>
-          <li>Loses: {{ data.data.records[2].lose }}</li>
-          <li>Draft: {{ data.data.records[2].draw }}</li>
-          <li>Win Rate: {{ calculateWinRate(data.data.records[2].win, data.data.records[2].lose) }}%</li>
+          <li>
+            Peak Elo: <span id="rank">{{ rankText }} ({{data.data.best_elo_rate}})</span>
+          </li>
           <li>Last online: {{ formatRelativeTime(data.data.latest_time) }}</li>
         </ul>
+      </div>
+
+      <div v-if="status === 'success'">
+        <table class="matches-table">
+          <thead>
+            <tr style="font-weight: bold">
+              <td>Total games</td>
+              <td>Best winstreak</td>
+              <td>Best time</td>
+              <td>W/L/D</td>
+              <td>Win rate</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr >
+              <td style="text-align: center;">{{ datas.data.total_played }}</td>
+              <td style="text-align: center;" title="Wins / Losees / Draft">{{ datas.data.highest_winstreak }}</td>
+              <td style="text-align: center;" >{{ formatTime(data.data.best_record_time) }}</td>
+              <td style="text-align: center;">{{ data.data.records[2].win }}/{{ data.data.records[2].lose }}/{{ data.data.records[2].draw }}</td>
+              <td style="text-align: center;">{{ calculateWinRate(data.data.records[2].win, data.data.records[2].lose) }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div v-else>
+        Loading ...
       </div>
 
       <PlayerStatsMatchComponent
@@ -51,8 +73,10 @@ export default {
   data() {
     return {
       data: null,
+      datas: [],
       uuid: "",
       error: null,
+      status: ""
     };
   },
   computed: {
@@ -87,6 +111,9 @@ export default {
       try {
         const response = await axios.get(apiUrl);
         this.data = response.data;
+        this.datas = response.data;
+        this.status = response.data.status;
+        console.log(this.datas);
         this.error = null; // Reset error if data is successfully fetched
       } catch (error) {
         this.data = null; // Reset data if an error occurs
@@ -175,8 +202,8 @@ export default {
   }
 
   .player-avatar {
-    border-radius: 50%;
-  }
+    border-radius: 20px;
+    }
 
   .player-stats-list {
     list-style: none;
