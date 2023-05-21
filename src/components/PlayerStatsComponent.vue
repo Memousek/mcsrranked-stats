@@ -16,6 +16,9 @@
           <li style="margin-bottom: 20px">
             <span id="rank">{{ rankText }} ({{data.data.elo_rate}})</span>
           </li>
+          <li v-if="data.data.elo_rank != null">
+            Ledder Rank: {{data.data.elo_rank}}
+          </li>
           <li>
             Peak Elo: <span id="rank">{{ rankText }} ({{data.data.best_elo_rate}})</span>
           </li>
@@ -28,7 +31,8 @@
           <thead>
             <tr style="font-weight: bold">
               <td>Total games</td>
-              <td>Best winstreak</td>
+              <td>Best W/S</td>
+              <td>Current W/S</td>
               <td>Best time</td>
               <td>W/L/D</td>
               <td>Win rate</td>
@@ -37,9 +41,10 @@
           <tbody>
             <tr >
               <td style="text-align: center;">{{ datas.data.total_played }}</td>
-              <td style="text-align: center;" title="Wins / Losees / Draft">{{ datas.data.highest_winstreak }}</td>
-              <td style="text-align: center;" >{{ formatTime(data.data.best_record_time) }}</td>
-              <td style="text-align: center;">{{ data.data.records[2].win }}/{{ data.data.records[2].lose }}/{{ data.data.records[2].draw }}</td>
+              <td style="text-align: center;">{{ datas.data.highest_winstreak }}</td>
+              <td style="text-align: center;">{{ datas.data.current_winstreak }}</td>
+              <td style="text-align: center;">{{ formatTime(data.data.best_record_time) }}</td>
+              <td style="text-align: center;" title="Wins / Losees / Draft">{{ data.data.records[2].win }}/{{ data.data.records[2].lose }}/{{ data.data.records[2].draw }}</td>
               <td style="text-align: center;">{{ calculateWinRate(data.data.records[2].win, data.data.records[2].lose) }}%</td>
             </tr>
           </tbody>
@@ -81,7 +86,7 @@ export default {
   },
   computed: {
     rankText() {
-      const elo = this.data?.elo_rate;
+      const elo = this.data.data.elo_rate;
       return this.addRank(elo);
     },
     getImageUrl() {
