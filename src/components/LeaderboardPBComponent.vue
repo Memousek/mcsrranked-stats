@@ -67,7 +67,6 @@ export default {
       .then((data) => {
         this.status = data.status;
         this.data = data.data;
-        console.log(this.data);
       })
       .catch((error) => {
         console.error(error);

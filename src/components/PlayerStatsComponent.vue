@@ -59,6 +59,7 @@
         :username="username"
         :uuid="data.data.uuid"
       ></PlayerStatsMatchComponent>
+
     </div>
     <div v-else>
       <p>No data available</p>
@@ -101,6 +102,7 @@ export default {
     if (params.has("username")) {
       this.username = params.get("username");
       this.fetchData();
+      params.set("username" ,this.username);
     }
   },
   methods: {
@@ -118,7 +120,6 @@ export default {
         this.data = response.data;
         this.datas = response.data;
         this.status = response.data.status;
-        console.log(this.datas);
         this.error = null; // Reset error if data is successfully fetched
       } catch (error) {
         this.data = null; // Reset data if an error occurs
