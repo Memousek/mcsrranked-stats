@@ -14,9 +14,10 @@
         <ul class="player-stats-list">
           <li>Username: {{ data.data.nickname }}</li>
           <li>
-            Elo: <span id="rank">{{ rankText }}</span>
+            Elo: <span id="rank">{{ rankText }} ({{data.data.elo_rate}})</span>
           </li>
           <li>Total games: {{ data.data.total_played }}</li>
+          
           <li>Highest win streak: {{ data.data.highest_winstreak }}</li>
           <li>Best time: {{ formatTime(data.data.best_record_time) }}</li>
           <li>Wins: {{ data.data.records[2].win }}</li>
