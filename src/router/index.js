@@ -4,13 +4,17 @@ import HomeView from '../views/HomeView.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'Stats',
     component: HomeView
   },
   {
     path: '/leaderboard',
-    name: 'leaderboard',
+    name: 'Leaderboard',
     component: () => import('../views/LeaderboardView.vue')
+  },
+  {
+    path: '/mcsrranked-stats',
+    redirect: '/'
   }
 ]
 
@@ -18,5 +22,10 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.name;
+  next();
+});
 
 export default router
