@@ -10,20 +10,35 @@
 
     <div v-if="data" class="player-details">
       <div class="player-card">
-        <img :src="getImageUrl" :alt="getImageAlt" class="player-avatar" />
-        <ul class="player-stats-list">
-          <li style="font-size: 2rem;font-weight: bold;">{{ data.data.nickname }}</li>
-          <li style="margin-bottom: 20px">
-            {{ addRank(data.data.elo_rate) }} ({{data.data.elo_rate}})
-          </li>
-          <li v-if="data.data.elo_rank != null">
-            Ledder Rank: {{data.data.elo_rank}}
-          </li>
-          <li>
-            Peak elo: {{ addRank(data.data.best_elo_rate) }} ({{data.data.best_elo_rate}})
-          </li>
-          <li>Last online: {{ formatRelativeTime(data.data.latest_time) }}</li>
-        </ul>
+        <div class="player-card-wrapper">
+          <img :src="getImageUrl" :alt="getImageAlt" class="player-avatar" />
+          <ul class="player-stats-list">
+            <li style="font-size: 2rem;font-weight: bold;">{{ data.data.nickname }}</li>
+            <li style="margin-bottom: 20px">
+              {{ addRank(data.data.elo_rate) }} ({{data.data.elo_rate}})
+            </li>
+            <li v-if="data.data.elo_rank != null">
+              Ledder Rank: {{data.data.elo_rank}}
+            </li>
+            <li>
+              Peak elo: {{ addRank(data.data.best_elo_rate) }} ({{data.data.best_elo_rate}})
+            </li>
+            <li>Last online: {{ formatRelativeTime(data.data.latest_time) }}</li>
+          </ul>
+        </div>
+
+        <div v-if="data.data.connections.discord || data.data.connections.youtube || data.data.connections.twitch " style="display: flex; gap: 10px">
+            <a v-if="data.data.connections.youtube" target="_blank" :href="'https://youtube.com/channel/' +  data.data.connections.youtube.id " style="display: flex">
+              <img src="https://www.svgrepo.com/show/13671/youtube.svg" width="20" />
+            </a>
+            <a v-if="data.data.connections.twitch" target="_blank" :href="'https://twitch.com/' +  data.data.connections.twitch.name " style="display: flex">
+              <img src="https://www.svgrepo.com/show/448251/twitch.svg" width="20" />
+            </a>
+            <span v-if="data.data.connections.discord" style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+              <img src="https://www.svgrepo.com/show/343548/discord-communication-interaction-message-network.svg" width="20" />
+              <span> {{ data.data.connections.discord.name }}</span>
+            </span>
+          </div>
       </div>
 
       <div v-if="status === 'success'">
@@ -60,6 +75,8 @@
         :uuid="data.data.uuid"
       ></PlayerStatsMatchComponent>
 
+      <PlayerStatChartComponent :username="username" :uuid="data.data.uuid"></PlayerStatChartComponent>
+
     </div>
     <div v-else>
       <p>No data available</p>
@@ -70,11 +87,12 @@
 <script>
 import axios from "axios";
 import PlayerStatsMatchComponent from "./PlayerStatsMatchComponent.vue";
-
+import PlayerStatChartComponent from "./PlayerStatChartComponent.vue";
 export default {
   name: "PlayerStatsComponent",
   components: {
     PlayerStatsMatchComponent,
+    PlayerStatChartComponent
   },
   data() {
     return {
@@ -218,8 +236,16 @@ export default {
     border: 1px solid;
     border-radius: 3px;
     display: flex;
+    flex-direction: column;
     gap: 20px;
     padding: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .player-card-wrapper {
+    display: flex;
+    gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;

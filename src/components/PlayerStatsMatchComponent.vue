@@ -50,7 +50,7 @@
           <tr v-for="timeline in selectedMatch.timelines" :key="timeline.time">
             <td>{{ getNicknameByUUID(timeline.uuid) }}</td>
             <td>{{ formatTime(timeline.time) }}</td>
-            <td>{{ timeline.timeline }}</td>
+            <td>{{ labelAdvancement(timeline.timeline) }}</td>
           </tr>
         </table>
       </div>
@@ -126,6 +126,11 @@ export default {
       } else {
         return this.formatTime(match.final_time);
       }
+    },
+    labelAdvancement(ev) {
+      let last = ev.split(".");
+      last = last[last.length - 1];
+      return last.split("_").join(" ");
     },
     getOpponentsName(match) {
     let opponentName = '';
