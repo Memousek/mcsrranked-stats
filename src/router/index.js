@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import NotFound from '../components/NotFound.vue'
 
 const routes = [
   {
@@ -13,14 +14,19 @@ const routes = [
     component: () => import('../views/LeaderboardView.vue')
   },
   {
+    path: '/:catchAll(.*)', // Fallback route for unrecognized routes
+    name: 'NotFound',
+    component: NotFound
+  },
+  {
     path: '/mcsrranked-stats',
     redirect: '/'
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  base: process.env.BASE_URL,
+  history: createWebHistory("/"),
+  base: "/",
   routes
 })
 

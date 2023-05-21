@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>404 - Page Not Found</title>
-    <script>
-      // Redirect all 404 errors to index.html
-      // This enables proper routing on GitHub Pages
-      if (window.location.pathname !== "/") {
-        window.location.href = "/index.html";
-      }
-    </script>
-  </head>
-  <body></body>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>404 - Page Not Found</title>
+</head>
+
+<body>
+  <script>
+    // Redirect to the index.html file to let Vue Router handle the route
+    window.location = '/index.html';
+  </script>
+</body>
+
 </html>
