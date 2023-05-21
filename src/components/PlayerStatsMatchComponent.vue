@@ -23,34 +23,40 @@
       </tbody>
     </table>
 
-    <div v-if="selectedMatch" class="modal">
+    <div v-if="selectedMatch" class="modal" @keydown.esc="closeModal">
       <div class="modal-content">
         <span class="close" @click="closeModal">&times;</span>
         <h3>Match Details</h3>
+
+        <b>{{ selectedMatch.members[0].nickname }}</b>
+        vs
+        <b>{{ selectedMatch.members[1].nickname }}</b>
+
         <p>Match ID: {{ selectedMatch.match_id }}</p>
         <p>Match Type: {{ getMatchTypeText(selectedMatch.match_type) }}</p>
         <p>Match Season: {{ selectedMatch.match_season }}</p>
-        <h4>Members:</h4>
-        <ul>
-          <li v-for="member in selectedMatch.members" :key="member.uuid">
-            <p>Nickname: {{ member.nickname }}</p>
-            <p>Badge: {{ member.badge }}</p>
-            <p>Elo Rate: {{ member.elo_rate }}</p>
-            <p>Elo Rank: {{ member.elo_rank }}</p>
-          </li>
-        </ul>
-        <h4>Score Changes:</h4>
-        <ul>
-          <li v-for="change in selectedMatch.score_changes" :key="change.uuid">
-            <p>UUID: {{ change.uuid }}</p>
-            <p>Change: {{ change.change }}</p>
-            <p>Score: {{ change.score }}</p>
-          </li>
-        </ul>
-        <p v-if="selectedMatch.forfeit">Forfeit</p>
-        <p v-if="selectedMatch.is_decay">Is Decay</p>
+        <p>Match Final time: {{ formatTime(selectedMatch.final_time) }}</p>
+        <p>Seed Type: {{ selectedMatch.seed_type }}</p>
+        <p>Winner: <b>{{ getNicknameByUUID(selectedMatch.winner) }}</b></p>
+        <h4>Timeline</h4>
+        <table class="matches-table">
+          <thead>
+            <tr>
+              <td>Player</td>
+              <td>Time</td>
+              <td>Event</td>
+            </tr>
+          </thead>
+          <tr v-for="timeline in selectedMatch.timelines" :key="timeline.time">
+            <td>{{ getNicknameByUUID(timeline.uuid) }}</td>
+            <td>{{ formatTime(timeline.time) }}</td>
+            <td>{{ timeline.timeline }}</td>
+          </tr>
+        </table>
       </div>
+
     </div>
+
   </div>
 </template>
 <script>
@@ -78,6 +84,14 @@ export default {
   mounted() {
     this.fetchMatches();
   },
+  computed: {
+    getImageUrl() {
+      return `https://skins.danielraybone.com/v1/head/${this.username}?width=150`;
+    },
+    getImageAlt() {
+      return `${this.username}'s head`;
+    },
+  },
   methods: {
     async fetchMatches() {
       try {
@@ -97,7 +111,7 @@ export default {
       } else if (type === 3) {
         return "Private";
       } else {
-        return "";
+        return "Event";
       }
     },
     formatTimestamp(timestamp) {
@@ -133,11 +147,27 @@ export default {
     getMatchResultClass(match) {
       return match.winner === this.uuid ? 'green' : 'red';
     },
-    openModal(match) {
+    async openModal(match) {
       this.selectedMatch = match;
+      try {
+        const response = await axios.get(
+          `https://mcsrranked.com/api/matches/${match.match_id}`
+        );
+        const matchDetails = response.data.data;
+        this.selectedMatch = { ...match, ...matchDetails };
+      } catch (error) {
+        console.error("Error fetching match details:", error);
+      }
+      document.body.classList.add('modal-open');
+    },
+    getNicknameByUUID(uuid) {
+      const member = this.selectedMatch.members.find(member => member.uuid === uuid);
+      return member ? member.nickname : '';
+      
     },
     closeModal() {
       this.selectedMatch = null;
+      document.body.classList.remove('modal-open');
     },
     formatTime(timeInMs) {
       const minutes = Math.floor(timeInMs / 60000);
@@ -187,6 +217,7 @@ export default {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .close {
@@ -210,5 +241,10 @@ export default {
 
 .green {
   color: #55ff00;
+}
+
+
+.modal-open {
+  overflow: hidden;
 }
 </style>
