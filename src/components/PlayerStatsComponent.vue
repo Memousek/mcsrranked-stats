@@ -14,13 +14,13 @@
         <ul class="player-stats-list">
           <li style="font-size: 2rem;font-weight: bold;">{{ data.data.nickname }}</li>
           <li style="margin-bottom: 20px">
-            <span id="rank">{{ rankText }} ({{data.data.elo_rate}})</span>
+            {{ addRank(data.data.elo_rate) }} ({{data.data.elo_rate}})
           </li>
           <li v-if="data.data.elo_rank != null">
             Ledder Rank: {{data.data.elo_rank}}
           </li>
           <li>
-            Peak Elo: <span id="rank">{{ rankText }} ({{data.data.best_elo_rate}})</span>
+            Peak elo: {{ addRank(data.data.best_elo_rate) }} ({{data.data.best_elo_rate}})
           </li>
           <li>Last online: {{ formatRelativeTime(data.data.latest_time) }}</li>
         </ul>
@@ -86,10 +86,6 @@ export default {
     };
   },
   computed: {
-    rankText() {
-      const elo = this.data.data.elo_rate;
-      return this.addRank(elo);
-    },
     getImageUrl() {
       return `https://skins.danielraybone.com/v1/head/${this.username}?width=150`;
     },
@@ -143,7 +139,7 @@ export default {
       ];
 
       for (const [min, max, rank] of ranks) {
-        if (elo > min && elo < max) {
+        if (elo >= min && elo <= max) {
           return rank;
         }
       }
